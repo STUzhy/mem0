@@ -47,9 +47,10 @@ OpenMemory 项目包含 4 个服务：
 3. 服务名称: `openmemory-mcp`
 4. 构建设置:
    - 根目录: `openmemory`
-   - Dockerfile 路径: `Dockerfile.mcp`
+   - 构建命令: 自动检测
 5. 环境变量:
    ```
+   ZBPACK_DOCKERFILE_NAME=mcp
    OPENAI_API_KEY=sk-your-api-key-here
    USER=demo-user
    API_KEY=${OPENAI_API_KEY}
@@ -65,19 +66,51 @@ OpenMemory 项目包含 4 个服务：
 3. 服务名称: `openmemory-ui`
 4. 构建设置:
    - 根目录: `openmemory`
-   - Dockerfile 路径: `Dockerfile.ui`
+   - 构建命令: 自动检测
 5. 环境变量:
    ```
+   ZBPACK_DOCKERFILE_NAME=ui
    NEXT_PUBLIC_API_URL=https://${OPENMEMORY_MCP_URL}
    NEXT_PUBLIC_USER_ID=demo-user
    ```
 6. 生成外部访问域名
+
+## Dockerfile 配置说明
+
+项目中包含两个 Dockerfile 文件：
+- `Dockerfile.mcp`: 用于后端 MCP 服务
+- `Dockerfile.ui`: 用于前端 UI 服务
+
+### 配置方式
+
+在每个服务的环境变量中设置 `ZBPACK_DOCKERFILE_NAME` 来指定使用的 Dockerfile：
+- 后端服务设置: `ZBPACK_DOCKERFILE_NAME=mcp`
+- 前端服务设置: `ZBPACK_DOCKERFILE_NAME=ui`
+
+### 替代配置方法
+
+你也可以使用以下任一方式替代环境变量配置：
+
+1. **重命名 Dockerfile**: 
+   - `openmemory-mcp.Dockerfile` (后端)
+   - `openmemory-ui.Dockerfile` (前端)
+
+2. **使用 zbpack.json**:
+   在服务根目录创建 `zbpack.json` 文件：
+   ```json
+   {
+     "dockerfile": {
+       "name": "mcp"
+     }
+   }
+   ```
 
 ## 环境变量参考
 
 ### 后端 (openmemory-mcp)
 | 变量名 | 描述 | 必需 |
 |--------|------|------|
+| `ZBPACK_DOCKERFILE_NAME` | 指定 Dockerfile (设为 `mcp`) | 是 |
 | `OPENAI_API_KEY` | OpenAI API 密钥 | 是 |
 | `USER` | 默认用户 ID | 是 |
 | `API_KEY` | API 密钥（通常与 OpenAI 相同） | 是 |
@@ -90,6 +123,7 @@ OpenMemory 项目包含 4 个服务：
 ### 前端 (openmemory-ui)
 | 变量名 | 描述 | 必需 |
 |--------|------|------|
+| `ZBPACK_DOCKERFILE_NAME` | 指定 Dockerfile (设为 `ui`) | 是 |
 | `NEXT_PUBLIC_API_URL` | 后端 API URL | 是 |
 | `NEXT_PUBLIC_USER_ID` | 默认用户 ID | 是 |
 
